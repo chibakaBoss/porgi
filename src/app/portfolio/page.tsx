@@ -3,75 +3,66 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
-// PortfolioPage.jsx
-// Single-file React component (Next.js app/page or any React app)
-// Requirements: Tailwind CSS configured in the project, and framer-motion installed.
-// How to use in Next.js: save as app/portfolio/page.jsx (or pages/portfolio.jsx), ensure Tailwind is set up.
+const projects = [
+  { title: 'Interactive 3D UI', desc: 'WebGL-like 3D interactions using CSS and JS', tags: ['React', 'Tailwind'] },
+  { title: 'Next.js Blog', desc: 'Fast, SEO-friendly blog with MDX', tags: ['Next.js', 'MDX'] },
+  { title: 'Mobile-first App', desc: 'Responsive PWA with offline support', tags: ['PWA', 'Performance'] },
+];
 
-export default function PortfolioPage() {
-  const orbRef = useRef(null);
+export default function MyComponent() {
+  const orbRef = useRef<HTMLDivElement | null>(null);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
 
   useEffect(() => {
     const el = orbRef.current;
     if (!el) return;
-  
+
     function handleMove(e: MouseEvent) {
       const rect = el.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
-      const ry = (x / rect.width) * 20; // rotateY
-      const rx = -(y / rect.height) * 20; // rotateX
+      const ry = (x / rect.width) * 20;
+      const rx = -(y / rect.height) * 20;
       setTilt({ rx, ry });
     }
-  
+
     function handleLeave() {
       setTilt({ rx: 0, ry: 0 });
     }
-  
+
     el.addEventListener('mousemove', handleMove);
     el.addEventListener('mouseleave', handleLeave);
-  
+
     return () => {
       el.removeEventListener('mousemove', handleMove);
       el.removeEventListener('mouseleave', handleLeave);
     };
   }, []);
-  
-
-
-  const projects = [
-    { title: 'Interactive 3D UI', desc: 'WebGL-like 3D interactions using CSS and JS', tags: ['React', 'Tailwind'] },
-    { title: 'Next.js Blog', desc: 'Fast, SEO-friendly blog with MDX', tags: ['Next.js', 'MDX'] },
-    { title: 'Mobile-first App', desc: 'Responsive PWA with offline support', tags: ['PWA', 'Performance'] },
-  ];
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-neutral-900 via-neutral-950 to-black text-white antialiased">
-            <header className="relative max-w-7xl mx-auto px-6 py-8 flex items-center justify-between overflow-hidden rounded-xl">
+      <header className="relative max-w-7xl mx-auto px-6 py-8 flex items-center justify-between overflow-hidden rounded-xl">
         {/* 3D gradient background */}
         <div
-            className="absolute inset-0 -z-10"
-            style={{
+          className="absolute inset-0 -z-10"
+          style={{
             background: "linear-gradient(135deg, rgba(0,255,200,0.15) 0%, rgba(0,100,255,0.15) 50%, rgba(255,0,200,0.15) 100%)",
             boxShadow: "0 10px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.05)",
-            backdropFilter: "blur(20px)"
-            }}
+            backdropFilter: "blur(20px)",
+          }}
         />
-
         <h1 className="text-xl font-semibold tracking-tight">JACK DANIELS BROS</h1>
-        
-        <nav className="space-x-4 hidden md:flex">
-            <a href="#projects" className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105">CHAMPS ZONE</a>
-            <a href="#about" className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105">FUCKING FOTO'S</a>
-            <a href="#contact" className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105">DRUNK LVL RUSSIA</a>
-        </nav>
-        
-        <button className="md:hidden px-3 py-1 border rounded text-sm bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-200">
-            Menu
-        </button>
-        </header>
 
+        <nav className="space-x-4 hidden md:flex">
+          <a href="#projects" className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105">CHAMPS ZONE</a>
+          <a href="#about" className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105">FUCKING FOTO'S</a>
+          <a href="#contact" className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105">DRUNK LVL RUSSIA</a>
+        </nav>
+
+        <button className="md:hidden px-3 py-1 border rounded text-sm bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-200">
+          Menu
+        </button>
+      </header>
 
       <section className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         {/* LEFT: Intro text */}
@@ -84,7 +75,7 @@ export default function PortfolioPage() {
           <p className="text-sm text-emerald-400 font-medium">Your blood my invo</p>
           <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">PORGI EVENT ZONE 2025</h2>
           <p className="text-neutral-300 max-w-xl">
-            A man can be drunk, but we can't shit our pants. 
+            A man can be drunk, but we can't shit our pants.
           </p>
 
           <div className="flex gap-3">
@@ -121,12 +112,18 @@ export default function PortfolioPage() {
                 transformStyle: 'preserve-3d',
                 transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(0)`,
                 transition: 'transform 0.08s linear',
-                border: '1px solid rgba(255,255,255,0.04)'
+                border: '1px solid rgba(255,255,255,0.04)',
               }}
             >
-              {/* layered decorative circles to create depth */}
-              <div className="absolute -left-24 -top-12 w-56 h-56 rounded-full blur-3xl mix-blend-screen opacity-70" style={{ background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), transparent 30%)' }} />
-              <div className="absolute right-[-60px] bottom-[-40px] w-72 h-72 rounded-full blur-2xl opacity-60" style={{ background: 'radial-gradient(circle at 60% 60%, rgba(255,255,255,0.04), transparent 35%)' }} />
+              {/* layered decorative circles */}
+              <div
+                className="absolute -left-24 -top-12 w-56 h-56 rounded-full blur-3xl mix-blend-screen opacity-70"
+                style={{ background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), transparent 30%)' }}
+              />
+              <div
+                className="absolute right-[-60px] bottom-[-40px] w-72 h-72 rounded-full blur-2xl opacity-60"
+                style={{ background: 'radial-gradient(circle at 60% 60%, rgba(255,255,255,0.04), transparent 35%)' }}
+              />
 
               {/* center content card */}
               <div className="relative z-10 m-6 p-6 rounded-2xl bg-black/30 backdrop-blur-sm border border-white/5 h-full flex flex-col justify-between">
@@ -156,7 +153,7 @@ export default function PortfolioPage() {
                 </div>
               </div>
 
-              {/* floating grid in the background to accent 3d */}
+              {/* floating grid background */}
               <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <linearGradient id="g1" x1="0" x2="1">
@@ -170,7 +167,10 @@ export default function PortfolioPage() {
             </div>
 
             {/* subtle outer rim */}
-            <div className="absolute -inset-0 rounded-3xl pointer-events-none" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)' }} />
+            <div
+              className="absolute -inset-0 rounded-3xl pointer-events-none"
+              style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)' }}
+            />
           </div>
         </motion.div>
       </section>
@@ -195,7 +195,9 @@ export default function PortfolioPage() {
 
       <section id="about" className="max-w-4xl mx-auto px-6 py-12">
         <h3 className="text-2xl font-bold mb-4">Temtseenii medeelel zurag horog</h3>
-        <p className="text-neutral-300">Za tegeed eniig hogjuuleed yawnaa, zurag horog medeelel sponsor oor yu baina ted nariig end shaanaa "Iveen tetgegchiin neriig end shaana 20k sawaad iveen tetgech bolooroi"</p>
+        <p className="text-neutral-300">
+          Za tegeed eniig hogjuuleed yawnaa, zurag horog medeelel sponsor oor yu baina ted nariig end shaanaa "Iveen tetgegchiin neriig end shaana 20k sawaad iveen tetgech bolooroi"
+        </p>
       </section>
 
       <section id="contact" className="max-w-4xl mx-auto px-6 py-12">
@@ -203,12 +205,18 @@ export default function PortfolioPage() {
         <form className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <input className="p-3 rounded bg-neutral-900 border border-neutral-800" placeholder="Your name" />
           <input className="p-3 rounded bg-neutral-900 border border-neutral-800" placeholder="Email" />
-          <textarea className="sm:col-span-2 p-3 rounded bg-neutral-900 border border-neutral-800" rows={5} placeholder="Message" />
+          <textarea
+            className="sm:col-span-2 p-3 rounded bg-neutral-900 border border-neutral-800"
+            rows={5}
+            placeholder="Message"
+          />
           <button className="sm:col-span-2 px-4 py-3 rounded bg-emerald-500/95 text-black font-semibold">Send message</button>
         </form>
       </section>
 
-      <footer className="border-t border-neutral-800 mt-12 py-6 text-center text-sm text-neutral-500">© {new Date().getFullYear()} ChibakaBoss — Built with Osor + his heart </footer>
+      <footer className="border-t border-neutral-800 mt-12 py-6 text-center text-sm text-neutral-500">
+        © {new Date().getFullYear()} ChibakaBoss — Built with Osor + his heart
+      </footer>
     </main>
   );
 }
