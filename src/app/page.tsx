@@ -5,24 +5,24 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 // Slideshow-д ашиглах зургууд
 const slideshowImages = [
-  '/images/photo28.jpeg',
-  '/images/photo1.jpeg',
-  '/images/photo7.jpeg',
-  '/images/photo17.jpeg',
-  '/images/photo3.jpeg',
-  '/images/photo6.jpeg',
-  '/images/photo13.jpeg',
-  '/images/photo16.jpeg',
-  '/images/photo19.jpeg',
-  '/images/photo20.jpeg',
-  '/images/photo22.jpeg',
+  '/images/photo28.JPEG',
+  '/images/photo1.JPEG',
+  '/images/photo7.JPEG',
+  '/images/photo17.JPEG',
+  '/images/photo3.JPEG',
+  '/images/photo6.JPEG',
+  '/images/photo13.JPEG',
+  '/images/photo16.JPEG',
+  '/images/photo19.JPEG',
+  '/images/photo20.JPEG',
+  '/images/photo22.JPEG',
 ];
 
 // SimpleGallery component
 function SimpleGallery() {
   const images = [
     {
-      src: '/images/photo33.jpeg',
+      src: '/images/photo33.JPEG',
       label: 'Johnny Sins',
       description: 'Donate hiigeed end durtai yumaa bichuuleerei',
     },

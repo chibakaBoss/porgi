@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
-const images = Array.from({ length: 29 }, (_, i) => `/images/photo${i + 1}.jpeg`);
+const images = Array.from({ length: 29 }, (_, i) => `/images/photo${i + 1}.JPEG`);
 
 
 export default function PhotosPage() {
