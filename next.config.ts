@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    unoptimized: true, // Зургийг Next.js Image Optimization-г хаах
+  },
 };
 
 export default nextConfig;
+
+
