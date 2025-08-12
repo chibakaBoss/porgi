@@ -22,12 +22,12 @@ const slideshowImages = [
 function SimpleGallery() {
   const images = [
     {
-      src: '/images/photo33.JPEG',
+      src: '/images/photo34.jpg',
       label: 'Johnny Sins',
       description: 'Donate hiigeed end durtai yumaa bichuuleerei',
     },
     {
-      src: '/images/photo34.jpg',
+      src: '/images/photo33.jpeg',
       label: 'Jordi El Niño Polla',
       description: 'Donate hiigeed end durtai yumaa bichuuleerei',
     },
