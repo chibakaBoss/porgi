@@ -1,43 +1,40 @@
 'use client';
-
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+
+const images = [
+  '/img1.jpg',
+  '/img2.jpg',
+  '/img3.jpg',
+  '/img4.jpg',
+  '/img5.jpg',
+  '/img6.jpg',
+  '/img7.jpg',
+  '/img8.jpg',
+  '/img9.jpg',
+  '/img10.jpg',
+];
+
+export default function MyComponent() {
+  const [index, setIndex] = useState(0);
+  const orbRef = useRef<HTMLDivElement | null>(null);
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
+  // Автоматаар солигдох
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextImage = () => setIndex((prev) => (prev + 1) % images.length);
+  const prevImage = () => setIndex((prev) => (prev - 1 + images.length) % images.length);
 
 const projects = [
   { title: 'Interactive 3D UI', desc: 'WebGL-like 3D interactions using CSS and JS', tags: ['React', 'Tailwind'] },
   { title: 'Next.js Blog', desc: 'Fast, SEO-friendly blog with MDX', tags: ['Next.js', 'MDX'] },
   { title: 'Mobile-first App', desc: 'Responsive PWA with offline support', tags: ['PWA', 'Performance'] },
 ];
-
-export default function MyComponent() {
-  const orbRef = useRef<HTMLDivElement | null>(null);
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
-
-  useEffect(() => {
-    const el = orbRef.current;
-    if (!el) return;
-
-    function handleMove(e: MouseEvent) {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      const ry = (x / rect.width) * 20;
-      const rx = -(y / rect.height) * 20;
-      setTilt({ rx, ry });
-    }
-
-    function handleLeave() {
-      setTilt({ rx: 0, ry: 0 });
-    }
-
-    el.addEventListener('mousemove', handleMove);
-    el.addEventListener('mouseleave', handleLeave);
-
-    return () => {
-      el.removeEventListener('mousemove', handleMove);
-      el.removeEventListener('mouseleave', handleLeave);
-    };
-  }, []);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-neutral-900 via-neutral-950 to-black text-white antialiased">
@@ -92,6 +89,51 @@ export default function MyComponent() {
             <span>•</span>
             <span>Dotka</span>
           </div>
+          <section className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        {/* LEFT: Intro text */}
+        {/* ... чиний intro text хэсэг ... */}
+
+        {/* RIGHT: Slideshow */}
+        <div className="relative w-[320px] h-[380px] md:w-[420px] md:h-[520px] rounded-3xl overflow-hidden shadow-lg border border-white/10">
+          <AnimatePresence>
+            <motion.img
+              key={images[index]}
+              src={images[index]}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6 }}
+            />
+          </AnimatePresence>
+
+          {/* Navigation arrows */}
+          <button
+            onClick={prevImage}
+            className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 p-2 rounded-full"
+          >
+            ‹
+          </button>
+          <button
+            onClick={nextImage}
+            className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 p-2 rounded-full"
+          >
+            ›
+          </button>
+
+          {/* Small indicator dots */}
+          <div className="absolute bottom-3 w-full flex justify-center gap-2">
+            {images.map((_, i) => (
+              <div
+                key={i}
+                className={`w-2 h-2 rounded-full ${i === index ? 'bg-white' : 'bg-white/40'}`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
         </motion.div>
 
         {/* RIGHT: 3D Orb/Card */}
@@ -101,77 +143,7 @@ export default function MyComponent() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="flex items-center justify-center"
         >
-          <div
-            ref={orbRef}
-            className="relative w-[320px] h-[380px] md:w-[420px] md:h-[520px] perspective-1000"
-            style={{ perspective: '1200px' }}
-          >
-            <div
-              className="absolute inset-0 rounded-3xl shadow-2xl bg-gradient-to-br from-indigo-800 via-violet-700 to-emerald-600/30 overflow-hidden"
-              style={{
-                transformStyle: 'preserve-3d',
-                transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(0)`,
-                transition: 'transform 0.08s linear',
-                border: '1px solid rgba(255,255,255,0.04)',
-              }}
-            >
-              {/* layered decorative circles */}
-              <div
-                className="absolute -left-24 -top-12 w-56 h-56 rounded-full blur-3xl mix-blend-screen opacity-70"
-                style={{ background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), transparent 30%)' }}
-              />
-              <div
-                className="absolute right-[-60px] bottom-[-40px] w-72 h-72 rounded-full blur-2xl opacity-60"
-                style={{ background: 'radial-gradient(circle at 60% 60%, rgba(255,255,255,0.04), transparent 35%)' }}
-              />
-
-              {/* center content card */}
-              <div className="relative z-10 m-6 p-6 rounded-2xl bg-black/30 backdrop-blur-sm border border-white/5 h-full flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-pink-500 to-yellow-400 flex items-center justify-center text-black font-bold">P.CH</div>
-                    <div>
-                      <div className="text-sm text-neutral-300">Boss · Bang2</div>
-                      <div className="text-lg font-semibold">Here will upload someone's shitty pic!!!</div>
-                    </div>
-                  </div>
-
-                  <p className="mt-4 text-neutral-300 text-sm">
-                    Hen negnii lalriin zurgiig oruulhiig huswel chataar yawuulaarai, 24/7 zurag huleej awna...
-                  </p>
-                </div>
-
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="space-y-1">
-                    <div className="text-xs text-neutral-400">Za tged sanaa onoo bnu?</div>
-                    <div className="text-sm font-medium">Saihan heltsgeegeerei</div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button className="px-3 py-1 rounded bg-emerald-500/95 text-black text-sm">Orgre</button>
-                    <button className="px-3 py-1 rounded border border-neutral-700 text-sm">Osor</button>
-                  </div>
-                </div>
-              </div>
-
-              {/* floating grid background */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="g1" x1="0" x2="1">
-                    <stop offset="0%" stopColor="rgba(255,255,255,0.02)" />
-                    <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-                  </linearGradient>
-                </defs>
-                <rect x="10" y="10" width="120" height="120" rx="8" fill="url(#g1)" transform="translate(40,40) rotate(12)" />
-                <rect x="60" y="160" width="80" height="80" rx="8" fill="url(#g1)" transform="translate(120,30) rotate(-6)" />
-              </svg>
-            </div>
-
-            {/* subtle outer rim */}
-            <div
-              className="absolute -inset-0 rounded-3xl pointer-events-none"
-              style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)' }}
-            />
-          </div>
+          
         </motion.div>
       </section>
 

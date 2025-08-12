@@ -24,3 +24,12 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes fade-slideshow {
+  0%, 5% { opacity: 1; }
+  10%, 100% { opacity: 0; }
+}
+
+.animate-fade-slideshow {
+  animation: fade-slideshow 50s infinite;
+}
