@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // Slideshow-д ашиглах зургууд
@@ -41,7 +41,10 @@ function SimpleGallery() {
   return (
     <div className="flex gap-6 p-6 bg-gray-900 justify-center">
       {images.map((img, index) => (
-        <div key={index} className="w-40 flex flex-col items-center rounded overflow-hidden bg-neutral-800 p-2">
+        <div
+          key={index}
+          className="w-40 flex flex-col items-center rounded overflow-hidden bg-neutral-800 p-2"
+        >
           <img
             src={img.src}
             alt={img.label}
@@ -67,7 +70,7 @@ function Calendar() {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   const events: Record<string, string[]> = {
-    '2025-08-31': ['Awards ceremony','Party at Rage’s home', 'Meet at 8pm'],
+    '2025-08-31': ['Awards ceremony', 'Party at Rage’s home', 'Meet at 8pm'],
     '2025-08-30': ['Tournament day'],
     '2025-08-29': ['Strategy technical meeting at 20:00PM'],
     '2025-09-12': ['Tsoomoo’s birthday'],
@@ -103,8 +106,18 @@ function Calendar() {
   }
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -196,17 +209,25 @@ function Calendar() {
               Events for {selectedDate.toLocaleDateString()}
             </h3>
             <ul className="list-disc list-inside text-neutral-300">
-              {getEventsForDate(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate()).length > 0 ? (
-                getEventsForDate(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate()).map((event, idx) => (
-                  <li key={idx}>{event}</li>
-                ))
+              {getEventsForDate(
+                selectedDate.getFullYear(),
+                selectedDate.getMonth(),
+                selectedDate.getDate()
+              ).length > 0 ? (
+                getEventsForDate(
+                  selectedDate.getFullYear(),
+                  selectedDate.getMonth(),
+                  selectedDate.getDate()
+                ).map((event, idx) => <li key={idx}>{event}</li>)
               ) : (
                 <li>No events for this day.</li>
               )}
             </ul>
           </>
         ) : (
-          <p className="text-neutral-500 italic select-none">Select a day to see events.</p>
+          <p className="text-neutral-500 italic select-none">
+            Select a day to see events.
+          </p>
         )}
       </div>
     </section>
@@ -216,6 +237,7 @@ function Calendar() {
 // Гол component
 export default function MyComponent() {
   const [index, setIndex] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Автомат зургуудыг солих
   useEffect(() => {
@@ -225,8 +247,28 @@ export default function MyComponent() {
     return () => clearInterval(timer);
   }, []);
 
-  const nextImage = () => setIndex((prev) => (prev + 1) % slideshowImages.length);
-  const prevImage = () => setIndex((prev) => (prev - 1 + slideshowImages.length) % slideshowImages.length);
+  const nextImage = () =>
+    setIndex((prev) => (prev + 1) % slideshowImages.length);
+  const prevImage = () =>
+    setIndex((prev) => (prev - 1 + slideshowImages.length) % slideshowImages.length);
+
+  // Menu анимэйшн variant-ууд
+  const menuVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        staggerChildren: 0.1,
+        when: 'beforeChildren',
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-neutral-900 via-neutral-950 to-black text-white antialiased">
@@ -236,20 +278,73 @@ export default function MyComponent() {
           className="absolute inset-0 -z-10"
           style={{
             background:
-              "linear-gradient(135deg, rgba(28, 129, 107, 0.15) 0%, rgba(0,100,255,0.15) 50%, rgba(255,0,200,0.15) 100%)",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.05)",
-            backdropFilter: "blur(20px)",
+              'linear-gradient(135deg, rgba(28, 129, 107, 0.15) 0%, rgba(0,100,255,0.15) 50%, rgba(255,0,200,0.15) 100%)',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.05)',
+            backdropFilter: 'blur(20px)',
           }}
         />
         <h1 className="text-xl font-semibold tracking-tight">JACK DANIELS BROS</h1>
+
+        {/* Desktop nav */}
         <nav className="space-x-4 hidden md:flex">
-          <a href="#projects" className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105">CHAMPS ZONE</a>
-          <a href="/photos" className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105">FUCKING FOTO'S</a>
-          <a href="/chatroom" className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105">DRUNK LVL RUSSIA</a>
+          <a
+            href="#projects"
+            className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105"
+          >
+            CHAMPS ZONE
+          </a>
+          <a
+            href="/photos"
+            className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105"
+          >
+            FUCKING FOTO'S
+          </a>
+          <a
+            href="/chatroom"
+            className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105"
+          >
+            DRUNK LVL RUSSIA
+          </a>
         </nav>
-        <button className="md:hidden px-3 py-1 border rounded text-sm bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-200">
+
+        {/* Mobile menu toggle */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden px-3 py-1 border rounded text-sm bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-200"
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+        >
           Menu
         </button>
+
+        {/* Mobile menu */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.nav
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={menuVariants}
+              className="absolute top-full right-6 mt-2 bg-neutral-900 rounded shadow-lg py-2 px-4 flex flex-col space-y-2 md:hidden z-50 min-w-[180px]"
+            >
+              {[
+                { href: '#projects', label: 'CHAMPS ZONE' },
+                { href: '/photos', label: "FUCKING FOTO'S" },
+                { href: '/chatroom', label: 'DRUNK LVL RUSSIA' },
+              ].map(({ href, label }) => (
+                <motion.a
+                  key={label}
+                  href={href}
+                  variants={itemVariants}
+                  className="text-neutral-300 hover:text-white transition-all duration-200 hover:scale-105"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {label}
+                </motion.a>
+              ))}
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Intro + Slideshow */}
@@ -261,13 +356,28 @@ export default function MyComponent() {
           className="space-y-6"
         >
           <p className="text-sm text-emerald-400 font-medium">Your blood my invo</p>
-          <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">PORGI EVENT ZONE 2025</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
+            PORGI EVENT ZONE 2025
+          </h2>
           <p className="text-neutral-300 max-w-xl">
-            We’ve walked through storms, through rain and sun, <br />Shared battles lost, and victories won. <br />Not bound by blood, but something more- <br />A brotherhood we can’t ignore.
+            We’ve walked through storms, through rain and sun, <br />
+            Shared battles lost, and victories won. <br />
+            Not bound by blood, but something more- <br />
+            A brotherhood we can’t ignore.
           </p>
           <div className="flex gap-3">
-            <a href="#projects" className="inline-flex items-center gap-2 bg-emerald-500/90 hover:bg-emerald-500 px-4 py-2 rounded shadow">Lets drink!!!</a>
-            <a href="#contact" className="inline-flex items-center gap-2 border border-neutral-700 px-4 py-2 rounded">Problem?</a>
+            <a
+              href="#projects"
+              className="inline-flex items-center gap-2 bg-emerald-500/90 hover:bg-emerald-500 px-4 py-2 rounded shadow"
+            >
+              Lets drink!!!
+            </a>
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 border border-neutral-700 px-4 py-2 rounded"
+            >
+              Problem?
+            </a>
           </div>
           <div className="flex gap-3 text-sm text-neutral-400">
             <span>Drink</span>
@@ -311,7 +421,9 @@ export default function MyComponent() {
             {slideshowImages.map((_, i) => (
               <div
                 key={i}
-                className={`w-2 h-2 rounded-full ${i === index ? 'bg-white' : 'bg-white/40'}`}
+                className={`w-2 h-2 rounded-full ${
+                  i === index ? 'bg-white' : 'bg-white/40'
+                }`}
               />
             ))}
           </div>
@@ -327,7 +439,9 @@ export default function MyComponent() {
       <section className="max-w-4xl mx-auto px-6 py-12">
         <h3 className="text-2xl font-bold mb-4">Top Donater and CEO's </h3>
         <p className="text-neutral-300 mb-6">
-          Дараах Хаан банк: 5925271827 дансанд donate хийж энд зургаа тавиулаарай. Та бүгдийн хийсэн donate сайн үйлсэд зориулагдах ба вэбсайт-даа хувь нэмэр оруулсан оюунлаг архичин танд баярлалараа.
+          Дараах Хаан банк: 5925271827 дансанд donate хийж энд зургаа
+          тавиулаарай. Та бүгдийн хийсэн donate сайн үйлсэд зориулагдах ба
+          вэбсайт-даа хувь нэмэр оруулсан оюунлаг архичин танд баярлалараа.
         </p>
         <SimpleGallery />
       </section>
@@ -336,14 +450,22 @@ export default function MyComponent() {
       <section id="contact" className="max-w-4xl mx-auto px-6 py-12">
         <h3 className="text-2xl font-bold mb-4">Get in touch</h3>
         <form className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input className="p-3 rounded bg-neutral-900 border border-neutral-800" placeholder="Your name" />
-          <input className="p-3 rounded bg-neutral-900 border border-neutral-800" placeholder="Email" />
+          <input
+            className="p-3 rounded bg-neutral-900 border border-neutral-800"
+            placeholder="Your name"
+          />
+          <input
+            className="p-3 rounded bg-neutral-900 border border-neutral-800"
+            placeholder="Email"
+          />
           <textarea
             className="sm:col-span-2 p-3 rounded bg-neutral-900 border border-neutral-800"
             rows={5}
             placeholder="Message"
           />
-          <button className="sm:col-span-2 px-4 py-3 rounded bg-emerald-500/95 text-black font-semibold">Send message</button>
+          <button className="sm:col-span-2 px-4 py-3 rounded bg-emerald-500/95 text-black font-semibold">
+            Send message
+          </button>
         </form>
       </section>
 
