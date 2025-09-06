@@ -1,11 +1,8 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// firebaseConfig.ts
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getAnalytics, isSupported } from "firebase/analytics";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
 const firebaseConfig = {
   apiKey: "AIzaSyCUYEBK79RlMZQf-VNYfCP6x1aATY5bjd8",
   authDomain: "porgichatroom.firebaseapp.com",
@@ -16,6 +13,21 @@ const firebaseConfig = {
   measurementId: "G-NM8F5PJZQW"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Initialize Firebase only once
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+// Firestore DB
+
+
+
+// Analytics only on browser
+let analytics;
+if (typeof window !== "undefined") {
+  isSupported().then((yes) => {
+    if (yes) {
+      analytics = getAnalytics(app);
+    }
+  });
+}
+
+export { analytics, app };

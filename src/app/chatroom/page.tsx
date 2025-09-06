@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';  // Import useRouter
+import { useRouter } from 'next/navigation'; 
 import { initializeApp } from 'firebase/app';
 import {
   getDatabase,
@@ -95,7 +95,7 @@ export default function LiveChatTournament() {
       {/* Буцах товч */}
       <button
         onClick={() => router.push('/')}  // Үндсэн page руу шилжүүлэх
-        className="mb-4 self-start bg-emerald-500 hover:bg-emerald-600 text-black px-4 py-2 rounded font-semibold"
+        className="mb-4 self-start bg-emerald-500 hover:bg-emerald-600 text-black px-2 py-1 rounded font-semibold"
       >
         ← Back to Home
       </button>

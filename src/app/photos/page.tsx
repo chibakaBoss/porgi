@@ -3,44 +3,43 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import { useRouter } from 'next/navigation'; 
 
 const images = Array.from({ length: 29 }, (_, i) => `/images/photo${i + 1}.JPEG`);
-
 
 export default function PhotosPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
+  const closeModal = () => setSelectedImage(null);
+   const router = useRouter();
+
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      {/* Back to Home + Title */}
-      <div className="flex items-center gap-4 mb-8">
-        <Link
-          href="/"
-          className="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition"
-        >
-          ← Back to Home
-        </Link>
-        <h1 className="flex justify-center text-3xl font-bold">Photo Gallery</h1>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-950 text-white p-8">
+      {/* Header */}
+      {/* Буцах товч */}
+            <button
+              onClick={() => router.push('/')}  // Үндсэн page руу шилжүүлэх
+              className="mb-4 self-start bg-emerald-500 hover:bg-emerald-600 text-black px-2 py-1 rounded font-semibold"
+            >
+              ← Back to Home
+            </button>
+            <div  className="mb-3 text-green-200">ЛАЛАРЫН ЗУРАГНУУД</div>
 
       {/* Gallery Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-8 gap-3">
         {images.map((src, idx) => (
           <motion.div
             key={idx}
-            whileHover={{ scale: 1.05 }}
-            className="cursor-pointer"
+            whileHover={{ scale: 1.1 }}
+            className="relative w-full aspect-square cursor-pointer overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:brightness-110"
             onClick={() => setSelectedImage(src)}
           >
-            <div className="relative w-full aspect-square">
-              <Image
-                src={src}
-                alt={`Photo ${idx + 1}`}
-                fill
-                className="object-cover rounded-lg"
-              />
-            </div>
+            <Image
+              src={src}
+              alt={`Photo ${idx + 1}`}
+              fill
+              className="object-cover rounded-xl"
+            />
           </motion.div>
         ))}
       </div>
@@ -49,24 +48,30 @@ export default function PhotosPage() {
       <AnimatePresence>
         {selectedImage && (
           <motion.div
-            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedImage(null)}
+            onClick={closeModal} // overlay дээр дархад хаагдах
           >
             <motion.div
+              className="relative max-w-4xl w-full rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
               initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
               exit={{ scale: 0.8 }}
-              className="relative max-w-4xl w-full"
+              onClick={(e) => e.stopPropagation()} // modal доторх image дээр дарсан click overlay-д дамжихгүй
             >
+              <button
+                className="absolute top-3 right-3 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 z-50"
+                onClick={closeModal}
+              >
+                ✕
+              </button>
               <Image
                 src={selectedImage}
                 alt="Selected"
                 width={1000}
                 height={1000}
-                className="object-contain rounded-lg"
+                className="object-contain w-full h-full rounded-2xl"
               />
             </motion.div>
           </motion.div>
