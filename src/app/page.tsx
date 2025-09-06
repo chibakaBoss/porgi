@@ -26,7 +26,7 @@ const slideshowImages = [
 function MobileMenuModal() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuItems = [
-    { href: '#projects', label: 'ДАЙНЫ ӨРӨӨ' },
+    { href: '#projects', label: 'ХАЛИНДАЙР' },
     { href: '/photos', label: "ЛАЛАРЫН ЗУРАГНУУД" },
     { href: '/chatroom', label: 'ЧАЛЧИХ ӨРӨӨ' },
   ];
