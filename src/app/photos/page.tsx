@@ -64,7 +64,7 @@ export default function PhotosPage() {
       <main className="mx-auto max-w-7xl px-4 pb-[max(env(safe-area-inset-bottom),2rem)] pt-6">
         <div className="mb-6">
           <h1 className="bg-gradient-to-br from-white via-white to-fuchsia-200 bg-clip-text text-3xl font-black tracking-tight text-transparent md:text-4xl">
-            Xenostasis Gallery
+            Boy's Gallery
           </h1>
           <p className="mt-1 text-sm text-neutral-300/80">Миний сэтгэл тэнгэр шиг байна... Б.Мөнх-эрдэнэ</p>
         </div>
