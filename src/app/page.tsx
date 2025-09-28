@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { collection, addDoc, onSnapshot, query, deleteDoc, doc } from 'firebase/firestore';
 import { getDatabase, ref, push, onValue, remove } from 'firebase/database';
 import { app } from '../../firebaseConfig';
+import { createPortal } from 'react-dom';
 
 // ------------ Slideshow assets ---------------------------------------------
 const slideshowImages = [
@@ -38,17 +39,72 @@ const SectionTitle: React.FC<{ title: string; subtitle?: string }> = ({ title, s
   </div>
 );
 
-// ------------ Mobile menu modal -------------------------------------------
+// ------------ Mobile menu modal (PORTAL + exact centering) -----------------
 function MobileMenuModal() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  // Body scroll lock when modal is open
+  useEffect(() => {
+    if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [menuOpen]);
+
   const menuItems = [
     { href: '#projects', label: 'ХАЛИНДАЙР' },
     { href: '/photos', label: "ЛАЛАРЫН ЗУРАГНУУД" },
     { href: '/chatroom', label: 'ЧАЛЧИХ ӨРӨӨ' },
   ];
 
+  const overlay = (
+    <AnimatePresence>
+      {menuOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          // Fullscreen overlay – viewport-safe height
+          className="fixed left-0 top-0 z-[100] h-[100dvh] w-screen bg-black/70 p-4"
+          onClick={() => setMenuOpen(false)}
+        >
+          {/* Exact centered panel */}
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={(e) => e.stopPropagation()}
+            className="fixed left-1/2 top-1/2 w-[min(90vw,22rem)] max-h-[80dvh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-white/10 bg-neutral-900 p-5 text-center shadow-2xl"
+          >
+            {menuItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="my-1 block w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 font-semibold text-neutral-200 hover:bg-emerald-400 hover:text-black"
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.label}
+              </a>
+            ))}
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="mt-4 rounded-full bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600"
+            >
+              close
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
-    <div className="relative md:hidden">
+    <div className="md:hidden">
+      {/* Trigger button lives in header */}
       <button
         onClick={() => setMenuOpen(true)}
         className="px-3 py-2 rounded-full border border-white/10 bg-white/10 text-sm font-semibold"
@@ -56,43 +112,8 @@ function MobileMenuModal() {
         Menu
       </button>
 
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 grid place-items-center bg-black/70"
-            onClick={() => setMenuOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="w-80 rounded-2xl border border-white/10 bg-neutral-900 p-5 text-center shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {menuItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="my-1 block w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 font-semibold text-neutral-200 hover:bg-emerald-400 hover:text-black"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.label}
-                </a>
-              ))}
-              <button
-                onClick={() => setMenuOpen(false)}
-                className="mt-4 rounded-full bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600"
-              >
-                close
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Render modal into <body> to avoid clipping/position bugs */}
+      {mounted && createPortal(overlay, document.body)}
     </div>
   );
 }
@@ -276,8 +297,8 @@ export default function MyComponent() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.05)_1px,transparent_1px)] bg-[size:36px_36px]" />
       </div>
 
-      {/* Header */}
-      <header className="relative mx-auto mt-6 flex max-w-7xl items-center justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/5 px-6 py-6 backdrop-blur-xl">
+      {/* Header (NO overflow-hidden) */}
+      <header className="relative mx-auto mt-6 flex max-w-7xl items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-6 py-6 backdrop-blur-xl">
         <div className="absolute inset-0 -z-10 opacity-60" style={{ background: 'linear-gradient(135deg, rgba(28,129,107,.15), rgba(0,100,255,.15) 50%, rgba(255,0,200,.15))' }} />
         <h1 className="text-xl font-semibold tracking-tight">JACK DANIELS BROS</h1>
         <nav className="hidden items-center gap-4 md:flex">
@@ -285,6 +306,7 @@ export default function MyComponent() {
           <a href="/photos" className="rounded-full px-3 py-1 text-neutral-300 hover:bg-white/10 hover:text-white">FUCKING FOTO'S</a>
           <a href="/chatroom" className="rounded-full px-3 py-1 text-neutral-300 hover:bg-white/10 hover:text-white">DRUNK LVL RUSSIA</a>
         </nav>
+        {/* Mobile menu trigger + PORTAL-rendered modal */}
         <MobileMenuModal />
       </header>
 
